@@ -1,0 +1,33 @@
+@page "/GetAllMedias"
+@using MVP.Data.Models
+@using MVP.Service
+@inject ClientIdService AniService
+
+<h3>Популярные аниме</h3>
+
+@if (medias == null)
+{
+    <p>Загрузка...</p>
+}
+else
+{
+    <ul>
+        @foreach (var media in medias)
+        {
+            <li>
+                <strong>@media.Title.romaji</strong>
+                — Оценка: @media.AverageScore
+                — Жанры: @string.Join(", ", media.Genres)
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Media> medias;
+
+    protected override async Task OnInitializedAsync()
+    {
+        medias = (await AniService.GetAllMediasAsync()).ToList();
+    }
+}
